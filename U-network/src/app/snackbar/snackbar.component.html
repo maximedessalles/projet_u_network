@@ -1,0 +1,9 @@
+<div style="width: 500px;" [ngClass]="{'succes':!data.error, 'fail':data.error}">
+    
+    <div class="dismiss">
+            
+        <button mat-icon-button (click)="SnackBarRef.dismiss()">
+                <div class="data">{{data.msg}}</div>
+        </button>
+    </div>
+</div>

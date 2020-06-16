@@ -1,0 +1,15 @@
+.fixed-bottom {
+    color: white;
+    position: absolute;
+    bottom: 20px;
+    left: 34px;
+}
+
+.mat-card-content {
+    min-height: 100px;
+    margin-bottom: 40px;
+}
+
+.row {
+    width: 100%
+}

@@ -1,0 +1,191 @@
+<div class="row">
+  <!-- Partie gauche: Liste des groupes + création -->
+  <mat-card class="col-3">
+    <mat-list>
+      <h3 mat-subheader style="background: #115d91; color: white;">Mes Groupes</h3>
+    
+     <mat-list-item *ngFor="let groupe of groupes" class="row">
+        <i class="material-icons">group</i>
+        <button class="btn col-6" (click)="afficher(groupe)">{{groupe.lb_groupe}} <br>{{groupe.user.length}} membres</button>
+        <mat-icon style="color:red" class="mat-18 col-4" *ngIf="isUserLoggedGroupCreator(groupe)" (click)="deleteGroupe(groupe)">delete</mat-icon>
+      <mat-icon class="col-4" *ngIf="groupe._id==leGroupe._id && leGroupe" style="color: #115d91;">label</mat-icon>
+        </mat-list-item>
+    </mat-list>
+    <mat-card>
+      <form #ajoutExperience="ngForm" (ngSubmit)="creerGroupe()">
+        <div class="form-group">
+          <label>Créer un groupe</label>
+          <input type="text" class="form-control" [(ngModel)]="monGroupe.lb_groupe" name="entreprise" id="entreprise"
+            placeholder="Entrer le nom de votre groupe" required>
+        </div>
+        <button type="submit" class="btn btn-outline-dark" [disabled]="!ajoutExperience.form.valid">Ajouter</button>
+      </form>
+    </mat-card>
+  </mat-card>
+  <!-- Partie centrale: actualité -->
+  <mat-card class="col-6">
+      <h6 mat-subheader style="background: #115d91; color: white;">Publications</h6>
+    <h1>{{leGroupe?.lb_groupe}}</h1>
+    <h4>{{leGroupe?.user.length}} membres</h4>
+    <div class="row">
+      <div class="col-10"></div>
+      <button mat-fab class="is-right col-1" *ngIf="!showForm" (click)="showForm=!showForm" style="background: #115d91; color: white; margin-bottom: 1%;"><mat-icon>border_color</mat-icon></button>
+  </div>
+  <mat-panel-description *ngIf="showForm">
+      <mat-card-content>
+          <mat-form-field class="col-12">
+              <mat-label>Publier</mat-label>
+              <textarea matInput name="corps" rows="4" placeholder="Exprimez-vous" [(ngModel)]="newPublication.corps">
+                  </textarea>
+          </mat-form-field>
+          <mat-form-field class="col-12" *ngIf="typePj=='lien'">
+              <mat-label>Url</mat-label>
+              <input matInput type="url" [(ngModel)]="newPublication.lien"/>
+          </mat-form-field>
+          <div class="col-12" *ngIf="typePj=='video'">
+              <input mat type="file" [(ngModel)]="newPublication.video"/>
+          </div>
+          <div class="col-12" *ngIf="typePj=='file'">
+              <input matFile type="file" [(ngModel)]="newPublication.file"/>
+          </div>
+          <mat-form-field class="col-9">
+              <mat-label>Pièce jointe</mat-label>
+              <mat-select [(value)]="typePj">
+                  <mat-option value="lien">
+                      Lien
+                  </mat-option>
+                  <mat-option value="video">
+                      Vidéo
+                  </mat-option>
+                  <mat-option value="file">
+                      fichier
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div class="example-button-row">
+                  <button mat-raised-button color="primary" (click)="addPublication()">Publier</button>
+                  <button mat-raised-button color="warn" (click)="showForm=!showForm">Annuler</button>
+                </div>
+      </mat-card-content>
+  </mat-panel-description>
+  
+  
+  <div class="row">
+      <div class="col-12">
+        <mat-card *ngFor="let publication of publications" style="margin-bottom: 1%;">
+          <mat-card-header>
+              <div class="col-md-9">
+                  <ng-container *ngFor="let user of users">
+                      <mat-chip *ngIf="user._id==publication.creator">
+                          <mat-card-title>{{user.name}} {{user.firstName}}</mat-card-title>
+                      </mat-chip>
+                  </ng-container>
+              </div>
+              <span class="col-3">{{publication.createdOn | date: formatDate}}</span>
+
+          </mat-card-header>
+          <a [attr.href]="publication.lien" *ngIf="publication.lien">{{publication.lien}}</a>
+
+          <mat-chip-list class="col-12">
+              {{publication.corps}}
+          </mat-chip-list>
+
+          <div class="row">
+              <mat-chip (click)="likeActu(publication)">
+                  <span>
+                      {{ publication.like.length }}
+                  </span>
+                  <mat-icon [ngClass]="{'green': publication.like.indexOf(monUser._id) != -1}">thumb_up</mat-icon>
+              </mat-chip>
+              <mat-chip (click)="commentActu(publication, content)">
+                  Commenter
+              </mat-chip>
+          </div>
+          <div class="row">
+              <mat-form-field>
+                  <mat-label>Commentaire</mat-label>
+                  <input matInput type="text" #content />
+              </mat-form-field>
+          </div>
+
+          <mat-divider></mat-divider>
+          <div style="max-height: 200px; overflow-y: auto;">
+              <div *ngFor="let comment of publication.comments; last as isLast">
+                  <p>
+                      {{comment.creator.name}} {{comment.creator.firstName}}
+                      ({{comment.date | date:"dd/MM/yyy HH:mm"}})
+                  </p>
+                  <p>
+                      {{comment.content}}
+                  </p>
+                  <mat-divider *ngIf="!isLast"></mat-divider>
+              </div>
+          </div>
+          <!-- <span matBadge="{{publication.like}}" matBadgeOverlap="false"><mat-icon style="color: #115d91;" (click)="addLike(publication)">thumb_up</mat-icon></span> -->
+      </mat-card>
+      </div>
+  </div>
+  
+  </mat-card>
+  <!-- Partie droite: Liste des users -->
+  <mat-card class="col-3">
+    
+    <mat-list>
+      <h3 mat-subheader style="background: #115d91; color: white;">Membres</h3>
+    
+      <mat-list-item *ngFor="let user of usersGroupe">
+        <button class="btn" (click)="goToProfile(user)">
+          <i class="material-icons">person</i>
+          {{user.name}} {{user.firstName}}
+        </button>
+        <mat-icon style="color:red" class="mat-18" *ngIf="!isCreator(user._id)&&isUserLoggedCreator()" (click)="deleteUserFromGroupe(user)">delete</mat-icon>
+        </mat-list-item>
+      <button class="btn btn-outline-dark" *ngIf="leGroupe.lb_groupe!=''" (click)="open(content)">Ajouter un user</button>
+    </mat-list>
+  </mat-card>
+</div>
+
+<!-- Partie modale ajout d'un User -->
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ajouter des utilisateurs</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilterModal($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nom </th>
+        <td mat-cell *matCellDef="let row">{{row.name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef> Prénom </th>
+          <td mat-cell *matCellDef="let row">{{row.firstName}} </td>
+        </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+      (click)="closeModal(selection.selected);modal.close('Save click')">Ajouter</button>
+  </div>
+</ng-template>

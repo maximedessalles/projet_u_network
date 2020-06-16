@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <BR>
+      <h2 class="float-left">AJOUTER UNE PROMOTION</h2>
+      <a routerLink="/administrationPromotion" class="btn btn-primary float-right" routerLinkActive="active">Retour</a>
+      <form #promotionCreation="ngForm" (ngSubmit)="creerPromotion()">
+
+        <div layout="row" layout-align="center center">
+          <div class="card input-group mb-3">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Libellé</label>
+                <input type="text" class="form-control" name="lb_promotion" id="lb_promotion"
+                  [(ngModel)]="mapromotion.lb_promotion" placeholder="Entrer le libellé de la promotion" required>
+              </div>
+              <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+                <p [innerHTML]="erreur"></p>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="!promotionCreation.form.valid">Créer</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

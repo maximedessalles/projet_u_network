@@ -1,0 +1,11 @@
+.card{
+    margin: 3%;
+}
+.titre{
+    border: 1px;
+    border-block-end-style: solid;
+    border-block-end-color: black;
+}
+.btn{
+    margin-top: 1%;
+}

@@ -1,0 +1,71 @@
+<div class="container">
+    <form #AnnuaireFormSelect="ngForm">
+        <mat-card class="my-3">
+            <mat-card-header>
+                <div mat-card-avatar></div>
+                <mat-card-title>Filtre/Recherche</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field class="col-2">
+                    <input matInput name="name" placeholder="Nom" [(ngModel)]="filter.name">
+                </mat-form-field>
+                <mat-form-field class="col-2">
+                    <mat-label>Filiere</mat-label>
+                    <mat-select name="Filiere" [(value)]="filter.filiere">
+                        <mat-option value="">None</mat-option>
+                        <mat-option *ngFor="let filiere of filieres" [value]="filiere._id">
+                            {{filiere.lb_filiere}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-2">
+                    <mat-label>Formation</mat-label>
+                    <mat-select name="Formation" [(value)]="filter.formation">
+                        <mat-option value="">None</mat-option>
+                        <mat-option *ngFor="let formation of formations" [value]="formation._id">
+                            {{formation.lb_formation}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-2">
+                    <mat-label>Promotion</mat-label>
+                    <mat-select name="Promotion" [(value)]="filter.promotion">
+                        <mat-option value="">None</mat-option>
+                        <mat-option *ngFor="let promotion of promotions " [value]="promotion._id">
+                            {{promotion.lb_promotion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn btn-primary" (click)="find()">
+                    recherche
+                </button>
+            </mat-card-content>
+        </mat-card>
+    </form>
+    <mat-card>
+        <mat-card-content>
+            <div class="row">
+                <mat-card *ngFor="let user of users" class="col-3">
+                    <mat-card-header>
+                        <div mat-card-avatar class="example-header-image"></div>
+                        <mat-card-title>{{user.name}}</mat-card-title>
+                        <mat-card-title>{{user.firstname}}</mat-card-title>
+                        <mat-card-subtitle>ici un test {{user.firstname}} rare !</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>
+                            {{user.email}}
+                        </p>
+                    </mat-card-content>
+                    <mat-card-actions class="button-users">
+                        <button aria-placeholder="center" (click)="goToProfile(user._id)" mat-button>Profil</button>
+                        <button mat-button>Contacter</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+</div>

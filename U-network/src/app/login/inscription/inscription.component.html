@@ -1,0 +1,79 @@
+<form #inscriptionForm="ngForm" (ngSubmit)="inscription()">
+  <div layout="row" layout-align="center center" class="container">
+    <div class="card input-group mb-3">
+      <div class="card-body">
+        <h4 mat-line class="noWrap">Informations générales</h4>
+        <div class="form-group">
+          <label for="civilite">Civilité</label>
+          <select id="civilite" [(ngModel)]="user.civilite" name="civilite" class="form-control">
+            <option value="Madame" selecte>Madame</option>
+            <option value="Monsieur">Monsieur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="email" class="form-control" name="firstName" id="firstName" [(ngModel)]="user.firstName"
+            placeholder="Entrer votre prénom" required>
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="email" class="form-control" name="name" id="name" [(ngModel)]="user.name"
+            placeholder="Entrer votre nom" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" (keyup)="checkEmail()" name="email" id="email"
+            [(ngModel)]="user.email" placeholder="Entrer votre email" required>
+          <div *ngIf="erreurMail!=''" class="alert alert-danger" role="alert">
+            <p [innerHTML]="erreurMail"></p>
+          </div>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" name="telephone" id="telephone"
+              [(ngModel)]="user.telephone" placeholder="Entrer votre numéro de téléphone" required>
+          </div>
+        <h4 mat-line class="noWrap">Informations scolaires</h4>
+        <div class="form-group">
+          <label for="formation">Formation</label>
+          <select id="formation" [(ngModel)]="maFormation" name="formation" class="form-control">
+            <optgroup *ngFor="let filiere of filieres" [label]=filiere.lb_filiere>
+              <ng-container *ngFor="let formation of formations">
+                <option *ngIf="checkFormation(filiere,formation)" [value]="formation._id">{{formation.lb_formation}}
+                </option>
+              </ng-container>
+
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="promotion">Promotion</label>
+          <select id="promotion" [(ngModel)]="maPromotion" name="promotion" class="form-control">
+            <option *ngFor="let promotion of promotions" [value]=promotion._id [label]=promotion.lb_promotion></option>
+          </select>
+        </div>
+        <h4 mat-line class="noWrap">Mot de passe</h4>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" id="password" [(ngModel)]="user.password"
+            placeholder="Entrer votre mot de passe" required>
+        </div>
+        <div class="form-group">
+          <label>Confirmer le mot de passe</label>
+          <input type="password" class="form-control" name="passwordConf" id="passwordConf" [(ngModel)]="passwordConf"
+            placeholder="Confirmer votre mot de passe" required>
+        </div>
+        <div class="form-group">
+          <mat-checkbox name="isRGPDAcceptedRegister" id="invalidCheck" [(ngModel)]="user.isRGPDAcceptedRegister"
+            required>J'accepte le stockage de mes données et le traitement de celles-ci conformément au règle <a target="_blank" href="http://localhost:4200/RGPD">RGPD</a>.
+          </mat-checkbox>
+
+        </div>
+        <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+          <p [innerHTML]="erreur"></p>
+        </div>
+        <button type="submit" class="btn btn-primary"
+          [disabled]="!inscriptionForm.form.valid || erreurMail!=''">S'enregistrer</button>
+      </div>
+    </div>
+  </div>
+</form>

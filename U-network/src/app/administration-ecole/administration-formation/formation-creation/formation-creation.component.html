@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <BR>      
+          <h2 class="float-left">AJOUTER UNE FORMATION</h2>
+        <a routerLink="/administrationFormation" class="btn btn-primary float-right" routerLinkActive="active">Retour</a>
+        <form #formationCreation="ngForm" (ngSubmit)="creerFormation()">
+          
+            <div layout="row" layout-align="center center">
+              <div class="card input-group mb-3">
+                <div class="card-body">
+                      <div class="form-group">
+                        <label >Libellé</label>
+                        <input type="text" class="form-control" name="lb_formation" id="lb_formation" [(ngModel)]="maFormation.lb_formation" placeholder="Entrer le libellé de la formation" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="filiere">Filières</label>
+                          <select id="filiere" [(ngModel)]="filiereId" name="filiere" class="form-control" required>
+                                  <option *ngFor="let filiere of filieres" [value]="filiere._id">{{filiere.lb_filiere}}</option>
+                                
+                            </select>
+                        </div>
+                  <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+                      <p [innerHTML]="erreur"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="!formationCreation.form.valid" >Créer</button>
+                </div>
+              </div>
+            </div>
+            
+            </form>
+    </div>
+  </div>
+</div>
+

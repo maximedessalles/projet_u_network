@@ -1,0 +1,23 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    width: 25%;
+  }
+  .activeGroup {
+    border: solid rgb(26, 121, 177) 1px;
+  }
+
+  .green {
+    color: green;
+}
+
+.mat-divider-horizontal {
+  position: static !important;
+}

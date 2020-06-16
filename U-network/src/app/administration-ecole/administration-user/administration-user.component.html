@@ -1,0 +1,102 @@
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <br>
+            <div class="col-12">
+                <span class="row">
+                    <h2 class="col-9">Utilisateur</h2>
+                    <button (click)="afficherAllUsers()" class="btn btn-outline-primary col-3">Afficher tous les users</button>
+                </span>
+            </div> 
+            
+            <div class="row">
+                <div class="col-6">
+                    <select class="col-6" id="formation" (change)="filter()" [(ngModel)]="maFormation._id" name="formation"
+                    class="form-control">
+                    <optgroup *ngFor="let filiere of filieres" [label]=filiere.lb_filiere>
+                        <ng-container *ngFor="let formation of formations">
+                            <option *ngIf="checkFormation(filiere,formation)" [value]="formation._id">
+                                {{formation.lb_formation}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-6">
+                        <select class="col-6" id="promotion" (change)="filter()" [(ngModel)]="maPromotion._id" name="promotion"
+                        class="form-control">
+                        <option selected *ngFor="let promotion of promotions" [value]=promotion._id
+                            [label]=promotion.lb_promotion>
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+
+
+            <table mat-table [dataSource]="dataSource" matSort (MatSortChange)="sortData($event)"
+                class="mat-elevation-z8">
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Nom </th>
+                    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName"> Prénom </th>
+                    <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Email </th>
+                    <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+                </ng-container>
+                <ng-container matColumnDef="deleteFromFormation">
+                    <th mat-header-cell *matHeaderCellDef> Supprimer de la formation </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button color="warn" (click)="redirectToDeleteFormation(row._id)">
+                            <mat-icon class="mat-18">remove</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="update">
+                    <th mat-header-cell *matHeaderCellDef> Update </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button color="accent" (click)="updateUser(row)">
+                            <mat-icon class="mat-18">system_update</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef> Delete </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button color="warn" (click)=redirectToDelete(row._id)>
+                            <mat-icon class="mat-18">delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+            <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+                <p [innerHTML]="erreur"></p>
+            </div>
+            <div class="row">
+                <button class="btn col-2" style="background: rgb(35, 123, 73); color: white; margin-right: 1%;" (click)="exportCsv()">Export to CSV</button>
+                <button (click)="addUserFormation()" class="btn btn-outline-primary col-3" style="margin-right: 1%;">Ajouter un utilisateur</button>
+                <button (click)="createUser()" class="btn btn-outline-primary col-3" style="margin-right: 5;">Créer un utilisateur</button>
+            </div>
+            <button class="btn btn-primary float-right" (click)="retour()">Retour</button>
+        </div>
+    </div>
+</div>

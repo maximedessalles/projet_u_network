@@ -1,0 +1,56 @@
+<h1 mat-dialog-title>Modifier un utilisateur</h1>
+
+<div mat-dialog-content>
+    <div class="form-group">
+        <label for="formation">Rôle</label>
+        <select name="filiere" [(ngModel)]="user.role[0]" class="form-control">
+            <option (value)="utilisateur">Utilisateur</option>
+            <option (value)="AdministrationEcole">AdministrationEcole     
+            </option>
+        </select>
+    </div>
+    <h4 mat-line class="noWrap">Informations générales</h4>
+        <div class="row form-group">
+          <div class="col">
+            <label for="validationCustom03">Email</label>
+            <input type="text" [(ngModel)]="user.email" name="email" class="form-control" disabled
+              placeholder="Email">
+          </div>
+          <div class="col">
+            <label for="validationCustom03">Civilité</label>
+            <select id="civilite" [(ngModel)]="user.civilite" name="civilite" class="form-control">
+              <option value="Madame" selecte>Madame</option>
+              <option value="Monsieur">Monsieur</option>
+            </select>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col ">
+            <label for="validationCustom03">Prénom</label>
+            <input type="text" name="firstName" [(ngModel)]="user.firstName" class="form-control"
+              placeholder="Prénom">
+          </div>
+          <div class="col">
+            <label for="validationCustom03">Nom</label>
+            <input type="text" name="name" [(ngModel)]="user.name" class="form-control" placeholder="Nom">
+          </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col ">
+              <label for="validationCustom03">Téléphone</label>
+              <input type="text" name="telephone" [(ngModel)]="user.telephone" class="form-control"
+                placeholder="Téléphone">
+            </div>
+            <div class="col">
+            </div>
+  
+          </div>
+</div>
+<mat-dialog-actions align="end">
+
+
+    <button type="button" class="btn btn-outline-dark" mat-dialog-close
+        (click)="closeModal();">Modifier</button>
+
+</mat-dialog-actions>

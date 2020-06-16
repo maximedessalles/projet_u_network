@@ -1,0 +1,201 @@
+<mat-card class="container-fluid">
+    <mat-card-header style="background: #115d91; color: white;">
+        <h1>Fil d'actualité</h1>
+    </mat-card-header>
+    <!-- Création d'une publication -->
+    <div class="row">
+        <div class="col-10"></div>
+        <button mat-fab class="is-right" *ngIf="!showForm" (click)="showForm=!showForm"
+            style="background: #115d91; color: white;">
+            <mat-icon>border_color</mat-icon>
+        </button>
+    </div>
+
+    <!-- Fil d'actualité -->
+    <div class="row">
+        <div class="col-2">
+            <mat-card style="margin-bottom: 1%;">
+                <button style="width:100%" class="btn btn-primary" (click)="goToGroup()">Mes groupes</button>
+            </mat-card>
+        </div>
+        <div class="col-8">
+            <mat-panel-description *ngIf="showForm">
+                <mat-card-content>
+                    <mat-form-field class="col-12">
+                        <mat-label>Publier</mat-label>
+                        <textarea matInput name="corps" rows="4" placeholder="Exprimez-vous"
+                            [(ngModel)]="newPublication.corps">
+                                    </textarea>
+                    </mat-form-field>
+                    <mat-form-field class="col-12" *ngIf="typePj=='lien'">
+                        <mat-label>Url</mat-label>
+                        <input matInput type="url" [(ngModel)]="newPublication.lien" />
+                    </mat-form-field>
+                    <div class="col-12" *ngIf="typePj=='video'">
+                        <input mat type="file" [(ngModel)]="newPublication.video" />
+                    </div>
+                    <div class="col-12" *ngIf="typePj=='file'">
+                        <input matFile type="file" [(ngModel)]="newPublication.file" />
+                    </div>
+                    <mat-form-field class="col-9">
+                        <mat-label>Pièce jointe</mat-label>
+                        <mat-select [(value)]="typePj">
+                            <mat-option value="lien">
+                                Lien
+                            </mat-option>
+                            <mat-option value="video">
+                                Vidéo
+                            </mat-option>
+                            <mat-option value="file">
+                                fichier
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div class="example-button-row">
+                        <button mat-raised-button color="primary" (click)="addPublication()">Publier</button>
+                        <button mat-raised-button color="warn" (click)="showForm=!showForm">Annuler</button>
+                    </div>
+                </mat-card-content>
+            </mat-panel-description>
+            <mat-card *ngFor="let publication of publications" style="margin-bottom: 1%;">
+                <mat-card-header>
+                    <div class="col-md-9">
+                        <ng-container *ngFor="let user of users">
+                            <mat-chip *ngIf="user._id==publication.creator">
+                                <mat-card-title>{{user.name}} {{user.firstName}}</mat-card-title>
+                            </mat-chip>
+                        </ng-container>
+                    </div>
+                    <span class="col-3">{{publication.createdOn | date: formatDate}}</span>
+
+                </mat-card-header>
+                <a [attr.href]="publication.lien" *ngIf="publication.lien">{{publication.lien}}</a>
+
+                <mat-chip-list class="col-12">
+                    {{publication.corps}}
+                </mat-chip-list>
+
+                <div class="row">
+                    <mat-chip (click)="likeActu(publication)">
+                        <span>
+                            {{ publication.like.length }}
+                        </span>
+                        <mat-icon [ngClass]="{'green': publication.like.indexOf(monUser._id) != -1}">thumb_up</mat-icon>
+                    </mat-chip>
+                    <mat-chip (click)="commentActu(publication, content)">
+                        Commenter
+                    </mat-chip>
+                </div>
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Commentaire</mat-label>
+                        <input matInput type="text" #content />
+                    </mat-form-field>
+                </div>
+
+                <mat-divider></mat-divider>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <div *ngFor="let comment of publication.comments; last as isLast">
+                        <p>
+                            {{comment.creator.name}} {{comment.creator.firstName}}
+                            ({{comment.date | date:"dd/MM/yyy HH:mm"}})
+                        </p>
+                        <p>
+                            {{comment.content}}
+                        </p>
+                        <mat-divider *ngIf="!isLast"></mat-divider>
+                    </div>
+                </div>
+                <!-- <span matBadge="{{publication.like}}" matBadgeOverlap="false"><mat-icon style="color: #115d91;" (click)="addLike(publication)">thumb_up</mat-icon></span> -->
+            </mat-card>
+        </div>
+        <!-- Liste Event -->
+        <div class="col-2">
+            <mat-card style="margin-bottom: 1%;">
+                <button style="width:100%" class="btn btn-primary" (click)="open(content)">Créer un événement</button>
+            </mat-card>
+            <mat-card *ngFor="let event of evenements" style="margin-bottom: 1%;">
+                <mat-card-header class="row">
+                        {{event.titre}}<br><br>
+                        <i class="material-icons">group</i>{{event.participants.length}}
+                    <div class="col-12">
+                        <mat-chip-list>
+                            <ng-container *ngFor="let user of users">
+                                <mat-chip *ngIf="user._id==event.creator">
+                                    <mat-chip>{{user.name}} {{user.firstName}}</mat-chip>
+                                </mat-chip>
+                            </ng-container>
+                        </mat-chip-list>
+                    </div>
+                </mat-card-header>
+                <textarea disabled="true" rows="4" style="background: white;" [(ngModel)]="event.corps"
+                    class="col-12"></textarea>
+                <span class="col-10">A {{event.lieu}}</span>
+                <span class="col-2">{{event.date | date: formatDate}}</span>
+                <button type="button" style="width:50%;height: 60px;" *ngIf="regarderParticipant(event)"
+                    (click)="participer(event)" class="btn btn-outline-primary">Participer</button>
+
+            </mat-card>
+        </div>
+    </div>
+</mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Créer un événement</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <ng-template aria-hidden="true">&times;</ng-template>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #creationEvenement="ngForm">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="pickerDebut" name="date" [(ngModel)]="evenement.date"
+                            placeholder="Date de début" required>
+                        <mat-datepicker-toggle matSuffix [for]="pickerDebut"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDebut></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Titre de l'événement</label>
+                <input type="text" class="form-control" [(ngModel)]="evenement.titre" name="titre" id="titre"
+                    placeholder="Entrer le nom de l'évenement" required>
+            </div>
+            <div class="form-group">
+                <label>Lieu de l'événement</label>
+                <input type="text" class="form-control" [(ngModel)]="evenement.lieu" name="lieu" id="lieu"
+                    placeholder="Entrer le lieu de l'évenement" required>
+            </div>
+            <div class="form-group">
+                <label>Description de l'événement</label>
+                <textarea rows="4" name="corps" style="background: white;" [(ngModel)]="evenement.corps" class="col-12"
+                    required></textarea>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="closeModal();modal.close('Save click')"
+            [disabled]="!creationEvenement.form.valid">Créer</button>
+    </div>
+</ng-template>

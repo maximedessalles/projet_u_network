@@ -1,0 +1,61 @@
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    <br>
+    <div>
+    <span><h2 class="float-left">FORMATION</h2></span>
+    <button  class="btn btn-primary float-right" (click)="retour()">Retour</button>
+    <button (click)="gotoCreation()" class="btn btn-primary float-right">Ajouter une formation</button>
+    </div>  
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  
+
+    <table mat-table [dataSource]="dataSource" matSort (MatSortChange)="sortData($event)" class="mat-elevation-z8">
+  
+      <!-- ID Column -->
+      <ng-container matColumnDef="_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="_id"> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row._id}} </td>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="lb_formation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="lb_formation"> LIBELLE </th>
+        <td mat-cell *matCellDef="let row"> {{row.lb_formation}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="update">
+          <th mat-header-cell *matHeaderCellDef> Update </th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="accent" (click)=redirectToUpdate(row._id)>
+                <mat-icon class="mat-18">system_update</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+     
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="warn" (click)=redirectToDelete(row._id)>
+                  <mat-icon class="mat-18">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+  
+    <mat-paginator
+              [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+
+<div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+    <p [innerHTML]="erreur"></p>
+  </div>
+
+</div>
+</div>
+</div>

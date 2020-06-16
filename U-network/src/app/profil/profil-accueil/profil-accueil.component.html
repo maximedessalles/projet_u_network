@@ -1,0 +1,222 @@
+<div class="container">
+  <div class="row">
+    <mat-card class="col-4">
+      <mat-card-header>
+        <mat-card-title>{{ userProfile?.firstName }} {{ userProfile?.name }}</mat-card-title>
+        <mat-card-subtitle>
+          <button *ngIf="userProfile?._id != userLogged?._id" class="btn btn-outline-primary"
+            (click)="addFriend()">Ajouter en ami</button>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="assets/img/defaultImageProfile.jpg">
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <button *ngIf="userProfile?._id == userLogged?._id" class="btn btn-outline-primary"
+              (click)="goUpdate()">Modifier le profil</button>
+          </mat-list-item>
+          <h3 mat-subheader>
+            Informations générale
+          </h3>
+          <mat-list-item>
+            <mat-icon mat-list-icon>email</mat-icon>
+            <p mat-line>
+              {{ userProfile?.email }}
+            </p>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <h3 mat-subheader>Formations</h3>
+          <mat-list-item *ngFor="let etude of userProfile?.etude">
+            <mat-icon mat-list-icon>school</mat-icon>
+            <ng-container *ngFor="let formation of formations">
+              <p mat-line class="noWrap" *ngIf="etude.formation==formation._id">{{formation.lb_formation}}</p>
+            </ng-container>
+            <br>
+            <ng-container *ngFor="let promotion of promotions">
+              <p [title]="promotion.lb_promotion" mat-line *ngIf="etude.promotion==promotion._id">{{promotion.lb_promotion}}</p>
+            </ng-container>
+          </mat-list-item>
+          <button *ngIf="userProfile?._id == userLogged?._id" type="button" class="btn btn-outline-primary"
+            (click)="open(content)">Ajouter une formation</button>
+          <br><br>
+
+          <mat-divider></mat-divider>
+
+          <h3 mat-subheader>Expériences</h3>
+          <mat-list-item *ngFor="let experience of userProfile?.experience">
+            <mat-icon mat-list-icon>work</mat-icon>
+            <p mat-line>{{experience.libelle_poste}}</p>
+            <p mat-line>{{experience.entreprise}}</p>
+            <p mat-line>({{experience.dateDebut | date:'dd/MM/yyyy'}} - {{experience.dateFin | date:'dd/MM/yyyy'}})</p>
+            <p mat-line class="noWrap">
+              {{experience.description}}
+            </p>
+
+          </mat-list-item>
+          <button *ngIf="userProfile?._id == userLogged?._id" type="button" class="btn btn-outline-primary"
+            (click)="openExperience(contentExperience)">Ajouter une
+            experience</button>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="col-8">
+      <mat-card-header>
+        <mat-card-title>Actualités</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-card *ngFor="let publication of publications" style="margin-bottom: 1%;">
+          <mat-card-header>
+            <div mat-card-avatar></div>
+            <mat-card-title>{{publication.corps}}</mat-card-title>
+          </mat-card-header>
+          <a [attr.href]="publication.lien" *ngIf="publication.lien">{{publication.lien}}</a>
+
+          <div class="row">
+            <mat-chip-list class="col-9">
+              <mat-chip>{{userProfile?.firstName}} {{userProfile?.name}}</mat-chip>
+            </mat-chip-list>
+            <span class="col-3">{{publication.createdOn | date: "dd/MM/yyyy"}}</span>
+          </div>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ajouter une formation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <ng-template aria-hidden="true">&times;</ng-template>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="promotion">Promotion</label>
+      <select id="promotion" name="promotion" class="form-control" [(ngModel)]="idPromotionAjout">
+        <option *ngFor="let promotion of lesPromotions" [value]=promotion._id [label]=promotion.lb_promotion></option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="promotion">Formation</label>
+      <select id="formation" name="formation" [(ngModel)]="idFormationAjout" class="form-control">
+        <option *ngFor="let formation of lesFormations" [value]=formation._id [label]=formation.lb_formation></option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="closeModal();modal.close('Save click')">Ajouter</button>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #contentExperience let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ajouter une experience</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <ng-template aria-hidden="true">&times;</ng-template>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form #ajoutExperience="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerDebut" name="dateDebutExperience" [(ngModel)]="dateDebutExperience"
+              placeholder="Date de début" required>
+            <mat-datepicker-toggle matSuffix [for]="pickerDebut"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDebut></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerFin" name="dateFinExperience" [(ngModel)]="dateFinExperience"
+              placeholder="Date de fin">
+            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Entreprise</label>
+        <input type="text" class="form-control" [(ngModel)]="nomEntreprise" name="entreprise" id="entreprise"
+          placeholder="Entrer le nom de votre entreprise" required>
+      </div>
+      <div class="form-group">
+        <label>Poste occupé</label>
+        <input type="text" class="form-control" name="lb_poste" id="lb_poste" [(ngModel)]="lb_poste"
+          placeholder="Libellé de votre poste" required>
+      </div>
+      <div class="form-group">
+        <label for="salaire">Salaire brut annuel</label>
+        <select id="salaire" name="salaire" [(ngModel)]="salaire" class="form-control" required>
+          <option [value]="" selected="selected">Je ne veux pas renseigner mon salaire.</option>
+          <option [value]="'0 - 5000'">0 - 5000</option>
+          <option [value]="'5000 - 10000'">5000 - 10000</option>
+          <option [value]="'10000 - 15000'">10000 - 15000</option>
+          <option [value]="'15000 - 20000'">15000 - 20000</option>
+          <option [value]="'20000 - 25000'">20000 - 25000</option>
+          <option [value]="'25000 - 30000'">25000 - 30000</option>
+          <option [value]="'30000 - 35000'">30000 - 35000</option>
+          <option [value]="'35000 - 40000'">35000 - 40000</option>
+          <option [value]="'40000 - 45000'">40000 - 45000</option>
+          <option [value]="'45000 - 50000'">45000 - 50000</option>
+          <option [value]="'50000 - 55000'">50000 - 55000</option>
+          <option [value]="'55000 - 60000'">55000 - 60000</option>
+          <option [value]="'60000 - 65000'">60000 - 65000</option>
+          <option [value]="'65000 - 70000'">65000 - 70000</option>
+          <option [value]="'+70000'">Au dessus de 70000</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" [(ngModel)]="description" name="description" rows="3"
+          style="height: 100%"></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="closeModalExperience();modal.close('Save click')"
+      [disabled]="!ajoutExperience.form.valid">Ajouter</button>
+  </div>
+</ng-template>

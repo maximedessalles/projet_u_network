@@ -1,0 +1,37 @@
+<div class="container">
+    <mat-card class="my-3">
+            <button class="btn btn-primary float-right" (click)="redirect()"> Offres d'emploi</button>
+        <mat-card-header>
+            <mat-card-title>Demande d'emploi</mat-card-title>
+            <mat-card-subtitle class="to-right">
+                <button class="btn btn-primary" (click)="goToCreate()">+ Créer une demande d'emploi</button>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="form-group">
+                <label for="formation">Filière ciblée</label>
+                <select [(ngModel)]="idFiliere" name="filiere" (change)="changeFiliere()" class="form-control">
+                    <option [value]="">None</option>
+                    <option *ngFor="let filiere of filieres" [value]="filiere._id">
+                        {{filiere.lb_filiere}}
+                    </option>
+                </select>
+            </div>
+
+            <mat-card *ngFor="let offre of offres;">
+                <mat-card-header>
+                    <mat-card-title>{{offre.lb_demande}} ({{offre.typeContrat}})</mat-card-title>
+                    <mat-card-subtitle>{{offre.lieu}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="col-11">
+                        <div>{{offre.smallDescription}}</div>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button (click)="goToShow(offre._id)" class="btn btn-primary">Details</button>
+                </mat-card-actions>
+            </mat-card>
+        </mat-card-content>
+    </mat-card>
+</div>

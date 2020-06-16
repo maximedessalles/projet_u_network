@@ -1,0 +1,66 @@
+<div class="container">
+    <mat-card class="my-3">
+        <mat-card-header>
+            <div mat-card-avatar></div>
+            <mat-card-title>Nouvelle offre d'emploi</mat-card-title>
+        </mat-card-header>
+        <form #loginForm="ngForm" (ngSubmit)="addRecrutement()">
+            <mat-card-content>
+                <mat-form-field class="col-6">
+                    <mat-label>Intitulé du poste</mat-label>
+                    <input matInput type="text" name="lb_recrutement" placeholder="Nom"
+                        [(ngModel)]="newRecrutement.lb_recrutement">
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <mat-label>Filière ciblée</mat-label>
+                    <mat-select name="filiere" [(ngModel)]="newRecrutement.filiere">
+                        <mat-option [value]="">None</mat-option>
+                        <mat-option *ngFor="let filiere of filieres" [value]="filiere._id">
+                            {{filiere.lb_filiere}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <mat-label>Lieu</mat-label>
+                    <input matInput type="text" name="lieu" placeholder="Localisation"
+                        [(ngModel)]="newRecrutement.lieu">
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <mat-label>Type de contrat</mat-label>
+                    <mat-select name="filiere" [(value)]="newRecrutement.typeContrat">
+                        <mat-option value="CDI">
+                            CDI
+                        </mat-option>
+                        <mat-option value="CDD">
+                            CDD
+                        </mat-option>
+                        <mat-option value="Stage">
+                            Stage
+                        </mat-option>
+                        <mat-option value="Alternance">
+                            Alternance
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                    <mat-label>Description courte</mat-label>
+                    <textarea matInput name="smallDescription" rows="2" placeholder="Description courte"
+                        [(ngModel)]="newRecrutement.smallDescription"></textarea>
+                </mat-form-field>
+                <mat-form-field class="col-12">
+                        <mat-label>Description longue</mat-label>
+                    <textarea matInput placeholder="Longue description" rows="4" [(ngModel)]="newRecrutement.longueDescription"></textarea>
+                </mat-form-field>
+                <mat-form-field class="col-12">
+                    <mat-label>Email de contact</mat-label>
+                    <input matInput type="text" name="emailContact" placeholder="name@email.com"
+                        [(ngModel)]="newRecrutement.emailContact">
+                </mat-form-field>
+            </mat-card-content>
+            <mat-card-actions>
+                <button type="submit" class="btn btn-primary">Créer</button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</div>

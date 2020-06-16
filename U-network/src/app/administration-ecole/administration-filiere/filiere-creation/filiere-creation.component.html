@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <BR>      
+          <h2 class="float-left">AJOUTER UNE FILIERE</h2>
+        <a routerLink="/administrationFiliere" class="btn btn-primary float-right" routerLinkActive="active">Retour</a>
+        <form #filiereCreation="ngForm" (ngSubmit)="creerFiliere()">
+          
+            <div layout="row" layout-align="center center">
+              <div class="card input-group mb-3">
+                <div class="card-body">
+                      <div class="form-group">
+                        <label >Libellé</label>
+                        <input type="text" class="form-control" name="lb_filiere" id="lb_filiere" [(ngModel)]="maFiliere.lb_filiere" placeholder="Entrer le libellé de la formation" required>
+                      </div>
+                  <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+                      <p [innerHTML]="erreur"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="!filiereCreation.form.valid" >Créer</button>
+                </div>
+              </div>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,34 @@
+<div class="row">
+  <mat-card class="col">
+    <mat-card-header style=" background-color: #115d91;">
+      <mat-card-title style="">Les dernier inscrits du réseau</mat-card-title>
+      <mat-card-subtitle class="float-right">
+        <button type="button" [routerLink]="['/annuaire']" class="btn btn-outline-primary">Accéder à l'annuaire</button>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div class="row mt-2">
+
+        <mat-card *ngFor="let user of users" class="col-3">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{user.name}}</mat-card-title>
+            <mat-card-title>{{user.firstname}}</mat-card-title>
+            <mat-card-subtitle>ici un test {{user.firstname}} rare !</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              {{user.email}}
+            </p>
+          </mat-card-content>
+          <mat-card-actions class="button-users">
+            <button aria-placeholder="center" (click)="goToProfile(user._id)" mat-button>Profil</button>
+            <button mat-button>Contacter</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,44 @@
+<mat-toolbar>
+    <mat-icon>phone</mat-icon>
+    <span> 04 06 08 10 12</span>
+    <span class="toolbar-bar">|</span>
+    <mat-icon>mail</mat-icon>
+    <span>Sciencesu@sciencesu.fr</span>
+    <span class="toolbar-spacer"></span>
+    <div *ngIf="!token" class="is-right">
+        <button class="btn" (click)="goToConnexion()">Connexion</button>|
+        <button class="btn" (click)="goToInscription()">Inscription</button>
+    </div>
+    <div *ngIf="token">
+        <div class="dropdown">
+
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img width="30px" src="assets/img/defaultImageProfile.jpg" alt="..."
+                    class="rounded-circle">{{monUser?.name +" "+monUser?.firstName}}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item" (click)="goToProfile()">Profile</button>
+                <button *ngIf="this.userService.checkRole(this.monUser,'AdministrationEcole')"
+                    (click)="goToAdministrationEcole()" class="dropdown-item">Administration</button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" (click)="logout()">Se déconnecter</button>
+            </div>
+        </div>
+    </div>
+</mat-toolbar>
+
+<div class="card">
+    <mat-toolbar>
+        <a  [routerLink]="['/']"><img src="assets/img/u-network-logo.png"
+            height="72px" (click)="goToAccueil()"></a>
+        <span class="toolbar-spacer"></span>
+        <div>
+            <button class="btn" (click)="goToAccueil()">Accueil</button>
+            <button class="btn" (click)="goToAnnuaire()">Annuaire</button>
+            <button class="btn" (click)="goToActualite()">Actualités</button>
+            <button class="btn" (click)="goToRecrutement()">Espace recrutement</button>
+            <button class="btn" (click)="goToContact()">Contact</button>
+        </div>
+    </mat-toolbar>
+</div>

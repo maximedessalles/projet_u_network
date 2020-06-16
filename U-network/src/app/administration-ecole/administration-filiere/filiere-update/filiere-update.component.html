@@ -1,0 +1,124 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <BR>      
+          <h2 class="float-left">{{maFiliere.lb_filiere}}</h2>
+        <a routerLink="/administrationFiliere" class="btn btn-primary float-right" routerLinkActive="active">Retour</a>
+        <form #filiereCreation="ngForm" (ngSubmit)="updateFiliere()">
+          
+            <div layout="row" layout-align="center center">
+              <div class="card input-group mb-3">
+                <div class="card-body">
+                      <div class="form-group">
+                        <label >Libellé</label>
+                        <input type="text" class="form-control" name="lb_filiere" id="lb_filiere" [(ngModel)]="maFiliere.lb_filiere" placeholder="Entrer le libellé de la formation" required>
+                      </div>
+                  <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+                      <p [innerHTML]="erreur"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="!filiereCreation.form.valid" >Mettre à jour</button>
+                </div>
+              </div>
+            </div>
+            </form>
+    </div>
+  </div>
+      <div class="row">
+        <div class="col-md-12">
+          <br>
+          <div>
+          <span><h2 class="float-left">Liste des formations</h2></span>
+          <button (click)="open(content)" class="btn btn-primary float-right">Ajouter une formation</button>
+          </div>  
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        
+      
+          <table mat-table [dataSource]="dataSource" matSort (MatSortChange)="sortData($event)" class="mat-elevation-z8">
+
+        
+            <!-- Name Column -->
+            <ng-container matColumnDef="lb_formation">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="lb_formation"> LIBELLE </th>
+              <td mat-cell *matCellDef="let row"> {{row.lb_formation}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="update">
+                <th mat-header-cell *matHeaderCellDef> Update </th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-icon-button color="accent" (click)=redirectToUpdate(row._id)>
+                      <mat-icon class="mat-18">system_update</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+           
+              <ng-container matColumnDef="delete">
+                  <th mat-header-cell *matHeaderCellDef> Delete </th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" (click)=redirectToDelete(row._id)>
+                        <mat-icon class="mat-18">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+        
+          <mat-paginator
+                    [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
+      
+      <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+          <p [innerHTML]="erreur"></p>
+        </div>
+      
+      </div>
+      </div>
+</div>
+
+
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Ajouter des formations</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilterModal($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null"
+                                [checked]="selection.isSelected(row)"
+                                [aria-label]="checkboxLabel(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>  
+          <ng-container matColumnDef="lb_formationModal">
+              <th mat-header-cell *matHeaderCellDef > LIBELLE </th>
+              <td mat-cell *matCellDef="let row"> {{row.lb_formation}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+            </tr>
+          </table>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="closeModal(selection.selected);modal.close('Save click')">Ajouter</button>
+    </div>
+  </ng-template>

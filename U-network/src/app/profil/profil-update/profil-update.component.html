@@ -1,0 +1,251 @@
+<div class="container">
+  <form>
+    <div class="row">
+      <div class="col-4">
+        <br>
+        <div class="row form-group">
+          <div class="col">
+            <img style="width: 100%;height: 300px;" src="assets/img/defaultImageProfile.jpg">
+            <button style="width: 100%" class="btn btn-outline-primary">Changer la photo de profil</button>
+          </div>
+        </div>
+        <div class="row form-group" style="max-height: 150;overflow:auto;">
+          <div class="col">
+            <h4 mat-line style="text-align: center;" class="noWrap">Demande d'amis</h4>
+            <mat-list-item *ngFor="let user of users">
+              <ng-container *ngFor="let userami of userProfile.user_wait">
+                <p *ngIf="user._id==userami" mat-line class="noWrap">{{user.name}} {{user.firstName}}
+                  <i class="material-icons " style="color: blue" (click)="addUser(user)">
+                    add
+                  </i>
+                  <i class="material-icons" style="color:red;" (click)="cancelAdd(user)">
+                    clear
+                  </i></p>
+              </ng-container>
+            </mat-list-item>
+          </div>
+        </div>
+        <div class="row form-group" style="max-height: 150;overflow:auto;">
+          <div class="col">
+            <h4 mat-line style="text-align: center;" class="noWrap">Mes amis</h4>
+            <mat-list-item *ngFor="let user of users">
+              <ng-container *ngFor="let userami of userProfile.user_friend">
+                <p *ngIf="user._id==userami" mat-line class="noWrap">{{user.name}} {{user.firstName}}
+                  <i class="material-icons" style="color:red;" (click)="deleteFriend(user)">
+                    clear
+                  </i></p>
+              </ng-container>
+            </mat-list-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <br>
+        <h4 mat-line class="noWrap">Informations générales</h4>
+        <div class="row form-group">
+          <div class="col">
+            <label for="validationCustom03">Email</label>
+            <input type="text" [(ngModel)]="userProfile.email" name="email" class="form-control" disabled
+              placeholder="Email">
+          </div>
+          <div class="col">
+            <label for="validationCustom03">Civilité</label>
+            <select id="civilite" [(ngModel)]="userProfile.civilite" name="civilite" class="form-control">
+              <option value="Madame" selecte>Madame</option>
+              <option value="Monsieur">Monsieur</option>
+            </select>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col ">
+            <label for="validationCustom03">Prénom</label>
+            <input type="text" name="firstName" [(ngModel)]="userProfile.firstName" class="form-control"
+              placeholder="Prénom">
+          </div>
+          <div class="col">
+            <label for="validationCustom03">Nom</label>
+            <input type="text" name="name" [(ngModel)]="userProfile.name" class="form-control" placeholder="Nom">
+          </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col ">
+              <label for="validationCustom03">Téléphone</label>
+              <input type="text" name="telephone" [(ngModel)]="userProfile.telephone" class="form-control"
+                placeholder="Téléphone">
+            </div>
+            <div class="col">
+            </div>
+  
+          </div>
+        <div class="row form-group">
+          <div class="col">
+            <button class="btn btn-outline-primary is-right" (click)="goUpdate()">Mettre à jour</button>
+          </div>
+
+        </div>
+        <h4 mat-line class="noWrap">Informations professionnelles</h4>
+        <div class="row form-group">
+          <div class="col ">
+            <mat-card style="max-height: 300px;overflow:auto;">
+              <mat-card-header>
+                <mat-card-title>Formations</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngFor="let etude of userProfile?.etude; let i = index;">
+                  <mat-icon mat-list-icon>school</mat-icon>
+                  <mat-icon mat-list-icon style="color:red;" (click)="deleteEtude(etude)">delete
+                  </mat-icon>
+                  <ng-container *ngFor="let formation of formations">
+                    <span class="noWrap" *ngIf="etude.formation==formation._id">{{formation.lb_formation}}</span>
+                  </ng-container>
+                  <ng-container *ngFor="let promotion of promotions">
+                    <p *ngIf="etude.promotion==promotion._id">{{promotion.lb_promotion}}</p>
+                  </ng-container>
+                  <mat-divider *ngIf="i+1 < userProfile?.etude.length"></mat-divider>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div class="col">
+            <mat-card style="max-height: 300px;overflow:auto;">
+              <mat-card-header>
+                <mat-card-title>Experiences</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngFor="let experience of userProfile?.experience; let i = index">
+                  <mat-icon mat-list-icon>work</mat-icon>
+                  <mat-icon style="color:red"(click)="deleteExperience(experience)">delete
+                  </mat-icon>
+                  <span>{{experience.libelle_poste}}</span>
+                  <p>{{experience.entreprise}}</p>
+                  <p>({{experience.dateDebut | date:'dd/MM/yyyy'}} - {{experience.dateFin | date:'dd/MM/yyyy'}})
+                  </p>
+                  <p mat-line class="noWrap">
+                    {{experience.description}}
+                  </p>
+                  <button type="button" class="btn btn-outline-primary"
+                    (click)="openExperience(contentExperience,experience)">Modifier</button>
+                  <mat-divider *ngIf="i+1 < userProfile?.experience.length"></mat-divider>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <h4 mat-line class="noWrap">Mot de passe</h4>
+        <div class="row form-group">
+          <div class="col">
+            <label for="validationCustom03">Mot de passe</label>
+            <input type="password" name="password" (keyup)="isPasswordOk()" [(ngModel)]="userProfile.password"
+              class="form-control" placeholder="Mot de passe">
+            <div *ngIf='erreur!=""' class="alert alert-danger" role="alert">
+              <p [innerHTML]="erreur"></p>
+            </div>
+          </div>
+          <div class="col">
+            <label for="validationCustom03">Confirmer le mot de passe</label>
+            <input type="password" name="passwordConf" (keyup)="isPasswordOk()" [(ngModel)]="passwordConf"
+              class="form-control" placeholder="Confirmer le mot de passe">
+          </div>
+
+        </div>
+        <div class="row form-group">
+          <div class="col">
+            <button class="btn btn-outline-primary is-right" [disabled]="!result" (click)="majPassword()">Changer le mot
+              de passe</button>
+          </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col">
+                <div  class="alert alert-info" role="alert">
+                    <p>Pour supprimer votre compte ou récupérer les données vous concernant , veuillez envoyer un mail via le formulaire de contact</p>
+                  </div>
+              
+            </div>
+  
+          </div>
+
+
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+
+
+
+<ng-template #contentExperience let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Modifier une experience</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <ng-template aria-hidden="true">&times;</ng-template>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form #ajoutExperience="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerDebut" name="dateDebut" [(ngModel)]="monExperience.dateDebut"
+              placeholder="Date de début" required>
+            <mat-datepicker-toggle matSuffix [for]="pickerDebut"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDebut></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="pickerFin" name="dateFin" [(ngModel)]="monExperience.dateFin"
+              placeholder="Date de fin">
+            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Entreprise</label>
+        <input type="text" class="form-control" [(ngModel)]="monExperience.entreprise" name="entreprise" id="entreprise"
+          placeholder="Entrer le nom de votre entreprise" required>
+      </div>
+      <div class="form-group">
+        <label>Poste occupé</label>
+        <input type="text" class="form-control" name="lb_poste" id="lb_poste" [(ngModel)]="monExperience.libelle_poste"
+          placeholder="Libellé de votre poste" required>
+      </div>
+      <div class="form-group">
+        <label for="salaire">Salaire brut annuel</label>
+        <select id="salaire" name="salaire" [(ngModel)]="monExperience.salaire" class="form-control" required>
+          <option [value]="" selected="selected">Je ne veux pas renseigner mon salaire.</option>
+          <option [value]="'0 - 5000'">0 - 5000</option>
+          <option [value]="'5000 - 10000'">5000 - 10000</option>
+          <option [value]="'10000 - 15000'">10000 - 15000</option>
+          <option [value]="'15000 - 20000'">15000 - 20000</option>
+          <option [value]="'20000 - 25000'">20000 - 25000</option>
+          <option [value]="'25000 - 30000'">25000 - 30000</option>
+          <option [value]="'30000 - 35000'">30000 - 35000</option>
+          <option [value]="'35000 - 40000'">35000 - 40000</option>
+          <option [value]="'40000 - 45000'">40000 - 45000</option>
+          <option [value]="'45000 - 50000'">45000 - 50000</option>
+          <option [value]="'50000 - 55000'">50000 - 55000</option>
+          <option [value]="'55000 - 60000'">55000 - 60000</option>
+          <option [value]="'60000 - 65000'">60000 - 65000</option>
+          <option [value]="'65000 - 70000'">65000 - 70000</option>
+          <option [value]="'+70000'">Au dessus de 70000</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" [(ngModel)]="monExperience.description" name="description"
+          rows="3" style="height: 100%"></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="closeModalExperience();modal.close('Save click')"
+      [disabled]="!ajoutExperience.form.valid">Modifier</button>
+  </div>
+</ng-template>

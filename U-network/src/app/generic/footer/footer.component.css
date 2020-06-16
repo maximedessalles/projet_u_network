@@ -1,0 +1,12 @@
+.blue{
+    background-color: #115d91;
+    color: white;
+}
+
+.btn {
+    color: white;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
